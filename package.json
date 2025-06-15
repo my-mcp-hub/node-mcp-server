@@ -1,0 +1,62 @@
+{
+  "name": "node-mcp-server",
+  "version": "0.0.1",
+  "description": "MCP Server Template For Node.js",
+  "author": "zhensherlock",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "qcc-openapi-mcp": "./build/index.js"
+  },
+  "files": [
+    "build",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "build/index.js",
+  "scripts": {
+    "prepare": "husky",
+    "lint": "npx eslint \"src/**/*.{ts,js}\"",
+    "build": "tsc --noEmit && cross-env NODE_ENV=production node scripts/build.js",
+    "dev": "npm run dev:stdio",
+    "dev:stdio": "cross-env NODE_ENV=local concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\"",
+    "dev:web": "cross-env NODE_ENV=local TRANSPORT=web concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\""
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "nanoid": "^5.1.5",
+    "node-fetch": "^3.3.2",
+    "yargs": "^17.7.2",
+    "zod": "^3.25.64"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@modelcontextprotocol/inspector": "^0.14.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node-fetch": "^2.6.12",
+    "@types/yargs": "^17.0.33",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.25.5",
+    "eslint": "^9.28.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "globals": "^16.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}
