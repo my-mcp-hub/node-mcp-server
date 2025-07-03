@@ -60,12 +60,14 @@ node build/index.js web --port 8401
 Custom tools can be added in the src/tools/index.ts file:
 
 ```ts
-server.tool(
+server.registerTool(
   'YourToolName',
-  'Tool description',
   {
-    // Define parameters using Zod schema
-    param1: z.string().describe('Parameter description'),
+    title: 'Your Tool Name',
+    description: 'Tool description',
+    inputSchema: {
+      param1: z.string().describe('Parameter description'),
+    },
   },
   ({ param1 }) => {
     // Implement tool logic
