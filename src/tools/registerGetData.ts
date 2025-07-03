@@ -6,10 +6,10 @@ export default function register(server: McpServer, options: OptionsType) {
   server.registerTool(
     'GetData',
     {
-      title: '查询企业工商照面信息',
-      description: '实时查询数据',
+      title: 'Get Data',
+      description: 'Get Data',
       inputSchema: {
-        keyword: z.string().describe('搜索关键字（企业名称、统一社会信用代码）'),
+        keyword: z.string().describe('search keyword'),
       },
     },
     async ({ keyword }) => {
