@@ -20,6 +20,9 @@ export const config = {
   minify: isProd,
   platform: 'node',
   external: ['yargs', 'node-fetch', 'cors', 'express', 'nanoid', 'zod', 'dotenv', '@modelcontextprotocol/sdk'],
+  alias: {
+    '@': path.resolve(__dirname, '../src'),
+  },
   plugins: [
     {
       name: 'build-plugin',

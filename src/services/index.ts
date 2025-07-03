@@ -1,11 +1,11 @@
 import { createRequire } from 'module'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { registerTools } from '../tools'
-import { registerResources } from '../resources'
-import { registerPrompts } from '../prompts'
+import { registerTools } from '@/tools'
+import { registerResources } from '@/resources'
+import { registerPrompts } from '@/prompts'
 import { stdioServer } from './stdio'
 import { webServer } from './web'
-import type { OptionsType } from '../types'
+import type { OptionsType } from '@/types'
 
 const dynamicImport = createRequire(import.meta.url)
 const pkg = dynamicImport('../package.json')

@@ -5,7 +5,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
-import type { OptionsType } from '../types'
+import type { OptionsType } from '@/types'
 
 export async function webServer(server: McpServer, options: OptionsType) {
   const app = express()

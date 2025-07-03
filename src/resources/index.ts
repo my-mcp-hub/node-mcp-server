@@ -1,5 +1,5 @@
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js'
-import type { OptionsType } from '../types'
+import type { OptionsType } from '@/types'
 
 export const registerResources = (server: McpServer, options: OptionsType) => {
   // @ts-ignore
