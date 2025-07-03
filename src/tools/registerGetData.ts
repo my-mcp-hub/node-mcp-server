@@ -27,7 +27,7 @@ export default function register(server: McpServer, options: OptionsType) {
 }
 
 export const getData = async (keyword: string, options: OptionsType) => {
-  if (keyword === 'error') {
+  if (!keyword || keyword === 'error') {
     return {
       success: false,
       message: 'not found',
@@ -35,6 +35,6 @@ export const getData = async (keyword: string, options: OptionsType) => {
   }
   return {
     success: true,
-    data: `keyword: ${keyword}; options: ${JSON.stringify(options, null, 2)}`,
+    data: `keyword: ${keyword};`,
   }
 }
