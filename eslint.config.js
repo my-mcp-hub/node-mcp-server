@@ -9,7 +9,7 @@ export default [
     ignores: ['**/build', '**/node_modules', '**/.*', '**/*.d.ts', '.husky/'],
   },
   {
-    files: ['src/**/*.{js,ts}'],
+    files: ['src/**/*.{js,ts}', 'tests/**/*.{js,ts}'],
   },
   {
     languageOptions: {
