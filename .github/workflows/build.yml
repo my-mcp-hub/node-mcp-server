@@ -1,16 +1,14 @@
-name: npm-publish
+name: build
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     if: github.repository == 'my-mcp-hub/node-mcp-server'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,8 +18,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org/
+          node-version: 20
           cache: npm
 
       - name: Install Package
@@ -30,7 +27,12 @@ jobs:
       - name: Build Package
         run: npm run build
 
-      - name: Publish NPM Package
-        run: npm publish
+      - name: Test Package
+        run: npm run coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          verbose: true
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
