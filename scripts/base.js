@@ -28,21 +28,21 @@ export const config = {
       name: 'build-plugin',
       setup(build) {
         build.onStart(async result => {
-          await after(result)
+          await before(result)
         })
         build.onEnd(async result => {
-          await before(result)
+          await after(result)
         })
       },
     },
   ],
 }
 
-const after = async () => {
+const before = async () => {
   await rimraf('build')
 }
 
-const before = async result => {
+const after = async result => {
   await fs.chmod('build/index.js', 0o755)
   console.log('✅ chmod 755 build/index.js done')
   if (isDev) {
@@ -59,6 +59,10 @@ const before = async result => {
     inspectorProcess = spawn('npx', ['@modelcontextprotocol/inspector', 'build/index.js'], {
       stdio: 'inherit',
       shell: true,
+      env: {
+        ...process.env,
+        DANGEROUSLY_OMIT_AUTH: true,
+      },
     })
 
     if (process.env.TRANSPORT === 'web') {
