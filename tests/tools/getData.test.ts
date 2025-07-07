@@ -4,7 +4,7 @@ import { getOptions } from '../utils'
 
 describe('getData', () => {
   const options = getOptions()
-  test('returns controller data for a valid input', async () => {
+  test('returns data for a valid input', async () => {
     expect(await getData('test', options)).toHaveProperty('data', 'keyword: test;')
   })
 
