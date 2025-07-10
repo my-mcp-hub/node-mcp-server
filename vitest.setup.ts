@@ -4,7 +4,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 const serverParams = new StdioClientTransport({
   command: 'c8',
-  args: ['tsx', './src/index.ts'],
+  args: ['--reporter=lcov', '--reporter=text', 'tsx', './src/index.ts'],
   env: {
     ...process.env,
     NODE_V8_COVERAGE: './coverage/tmp',
