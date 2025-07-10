@@ -6,7 +6,7 @@
   "type": "module",
   "license": "MIT",
   "bin": {
-    "qcc-openapi-mcp": "./build/index.js"
+    "node-mcp-server": "./build/index.js"
   },
   "files": [
     "build",

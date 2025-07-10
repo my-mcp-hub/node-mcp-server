@@ -6,7 +6,7 @@ import { getOptions } from './utils'
 import 'dotenv/config'
 
 const argv = await yargs()
-  .scriptName('openapi-server-mcp')
+  .scriptName('node-mcp-server')
   .usage('$0 <command> [options]')
   .command(
     'stdio',
