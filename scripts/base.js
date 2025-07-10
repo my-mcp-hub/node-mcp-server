@@ -9,6 +9,7 @@ const isProd = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'local'
 let inspectorProcess = null
 let webProcess = null
+let autoOpenBrowser = true
 
 /** @type {import('esbuild').BuildOptions} */
 export const config = {
@@ -62,8 +63,10 @@ const after = async result => {
       env: {
         ...process.env,
         DANGEROUSLY_OMIT_AUTH: true,
+        MCP_AUTO_OPEN_ENABLED: autoOpenBrowser,
       },
     })
+    autoOpenBrowser = false
 
     if (process.env.TRANSPORT === 'web') {
       if (webProcess) {
