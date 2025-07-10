@@ -2,7 +2,6 @@ import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mc
 import type { OptionsType } from '@/types'
 
 export const registerResources = (server: McpServer, options: OptionsType) => {
-  // @ts-ignore
   server.registerResource(
     'search',
     new ResourceTemplate('search://{keyword}', {
@@ -17,7 +16,7 @@ export const registerResources = (server: McpServer, options: OptionsType) => {
         contents: [
           {
             uri: uri.href,
-            text: `hello ${keyword}`,
+            text: `search ${keyword}`,
           },
         ],
       }

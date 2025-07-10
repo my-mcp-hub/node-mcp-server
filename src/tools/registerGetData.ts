@@ -18,7 +18,7 @@ export default function register(server: McpServer, options: OptionsType) {
         content: [
           {
             type: 'text',
-            text: success ? JSON.stringify(data) : message!,
+            text: success ? data! : message!,
           },
         ],
       }

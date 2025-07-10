@@ -7,8 +7,9 @@ import { stdioServer } from './stdio'
 import { webServer } from './web'
 import type { OptionsType } from '@/types'
 
+const isTest = process.env.NODE_ENV === 'test'
 const dynamicImport = createRequire(import.meta.url)
-const pkg = dynamicImport('../package.json')
+const pkg = dynamicImport(isTest ? '../../package.json' : '../package.json')
 
 const createServer = (options: OptionsType) => {
   const server = new McpServer({

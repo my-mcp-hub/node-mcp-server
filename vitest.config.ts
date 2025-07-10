@@ -8,6 +8,6 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     coverage: {
       include: ['src/**/*.ts'],
-    }
+    },
   },
 })
