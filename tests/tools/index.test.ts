@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-describe('getDataTool', async () => {
+describe('getDataTool', () => {
   test('returns data for a valid input', async () => {
     expect(
       await global.client.callTool({

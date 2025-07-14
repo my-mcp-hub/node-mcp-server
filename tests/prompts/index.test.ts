@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-describe('echoPrompt', async () => {
+describe('echoPrompt', () => {
   test('should return correct prompt content for a valid argument', async () => {
     expect(
       await global.client.getPrompt({
