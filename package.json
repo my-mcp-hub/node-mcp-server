@@ -25,7 +25,7 @@
     "coverage": "rimraf coverage && npm run test && c8 report --reporter=html"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.15.0",
+    "@modelcontextprotocol/sdk": "^1.15.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@modelcontextprotocol/inspector": "^0.16.0",
+    "@modelcontextprotocol/inspector": "^0.16.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node-fetch": "^2.6.12",
@@ -49,7 +49,7 @@
     "concurrently": "^9.2.0",
     "cross-env": "^7.0.3",
     "esbuild": "^0.25.6",
-    "eslint": "^9.30.1",
+    "eslint": "^9.31.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.1",
     "globals": "^16.3.0",
