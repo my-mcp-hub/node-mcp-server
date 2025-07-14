@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 import { promises as fs } from 'fs'
 import { spawn } from 'child_process'
 import { rimraf } from 'rimraf'
+import kill from 'tree-kill'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isProd = process.env.NODE_ENV === 'production'
@@ -55,7 +56,8 @@ const after = async result => {
 
     console.log('🚀 Starting @modelcontextprotocol/inspector...')
     if (inspectorProcess) {
-      inspectorProcess.kill('SIGINT')
+      kill(inspectorProcess.pid, 'SIGINT')
+      // inspectorProcess.kill('SIGINT')
     }
     inspectorProcess = spawn('npx', ['@modelcontextprotocol/inspector', 'build/index.js'], {
       stdio: 'inherit',
