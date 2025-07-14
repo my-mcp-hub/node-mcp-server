@@ -21,7 +21,7 @@
     "dev": "npm run dev:stdio",
     "dev:stdio": "cross-env NODE_ENV=local concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\"",
     "dev:web": "cross-env NODE_ENV=local TRANSPORT=web concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\"",
-    "test": "cross-env NODE_ENV=test vitest run",
+    "test": "vitest run",
     "coverage": "rimraf coverage && npm run test && c8 report --reporter=html"
   },
   "dependencies": {

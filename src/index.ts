@@ -4,9 +4,12 @@ import { hideBin } from 'yargs/helpers'
 import { startWebServer, startStdioServer } from './services'
 import { getOptions } from './utils'
 import 'dotenv/config'
+import pkg from '../package.json' with { type: 'json' }
+
+const name = 'node-mcp-server'
 
 const argv = await yargs()
-  .scriptName('node-mcp-server')
+  .scriptName(name)
   .usage('$0 <command> [options]')
   .command(
     'stdio',
@@ -35,7 +38,10 @@ if (!argv._[0]) {
 }
 
 async function startServer(mode: string, argv: ArgumentsCamelCase) {
-  const options = getOptions(argv)
+  const options = getOptions(argv, {
+    name,
+    version: pkg.version,
+  })
   if (mode === 'stdio') {
     startStdioServer(options).catch(console.error)
   } else if (mode === 'web') {
