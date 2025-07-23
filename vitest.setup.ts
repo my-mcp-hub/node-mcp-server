@@ -3,8 +3,14 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 const serverParams = new StdioClientTransport({
-  command: 'c8',
-  args: ['--reporter=lcov', '--reporter=text', 'tsx', './src/index.ts'],
+  command: 'nyc',
+  args: [
+    '--merge-async',
+    '--reporter=lcov',
+    '--reporter=text',
+    'tsx',
+    './src/index.ts'
+  ],
   env: {
     ...process.env,
     NODE_V8_COVERAGE: './coverage/tmp',
