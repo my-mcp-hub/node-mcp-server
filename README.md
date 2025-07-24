@@ -96,8 +96,8 @@ server.registerTool(
 ## License
 [MIT](LICENSE)
 
-[npm-release-link]: https://www.npmjs.com/package/my-mcp-hub/node-mcp-server
-[npm-release-shield]: https://img.shields.io/npm/v/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[npm-release-link]: https://www.npmjs.com/package/@my-mcp-hub/node-mcp-server
+[npm-release-shield]: https://img.shields.io/npm/v/@my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [codecov-link]: https://coveralls.io/github/my-mcp-hub/node-mcp-server?branch=main
 [codecov-shield]: https://img.shields.io/coverallsCoverage/github/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&style=flat-square&logo=codecov&logoColor=white
 [github-release-date-link]: https://github.com/my-mcp-hub/node-mcp-server/releases
