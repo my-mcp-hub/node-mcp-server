@@ -12,12 +12,12 @@ const serverParams = new StdioClientTransport({
     './src/index.ts'
   ],
   env: {
-    ...process.env,
+    ...process.env as Record<string, string>,
     NODE_V8_COVERAGE: './coverage/tmp',
   },
 })
 const client = new Client({
-  name: 'node-mcp-client',
+  name: 'test-mcp-client',
   version: '1.0.0',
 })
 await client.connect(serverParams)
