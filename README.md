@@ -2,6 +2,12 @@
 
 A Model Context Protocol (MCP) server template for Node.js applications. This template provides a foundation for building MCP-compatible servers with support for multiple transport protocols.
 
+[![][npm-release-shield]][npm-release-link]
+[![][codecov-shield]][codecov-link]
+[![][github-release-date-shield]][github-release-date-link]
+[![][github-action-build-shield]][github-action-build-link]
+[![][github-license-shield]][github-license-link]
+
 ## Features
 - Multiple Transport Protocols :
 
@@ -89,3 +95,14 @@ server.registerTool(
 
 ## License
 [MIT](LICENSE)
+
+[npm-release-link]: https://www.npmjs.com/package/my-mcp-hub/node-mcp-server
+[npm-release-shield]: https://img.shields.io/npm/v/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[codecov-link]: https://coveralls.io/github/my-mcp-hub/node-mcp-server?branch=main
+[codecov-shield]: https://img.shields.io/coverallsCoverage/github/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&style=flat-square&logo=codecov&logoColor=white
+[github-release-date-link]: https://github.com/my-mcp-hub/node-mcp-server/releases
+[github-release-date-shield]: https://img.shields.io/github/release-date/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&style=flat-square
+[github-action-build-link]: https://github.com/my-mcp-hub/node-mcp-server/actions/workflows/build.yml
+[github-action-build-shield]: https://img.shields.io/github/actions/workflow/status/my-mcp-hub/node-mcp-server/build.yml?branch=main&color=1677FF&label=build&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-license-link]: https://github.com/my-mcp-hub/node-mcp-server/blob/main/LICENSE
+[github-license-shield]: https://img.shields.io/github/license/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&style=flat-square
