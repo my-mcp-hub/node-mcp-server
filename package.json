@@ -22,7 +22,7 @@
     "dev:stdio": "cross-env NODE_ENV=local concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\"",
     "dev:web": "cross-env NODE_ENV=local TRANSPORT=web concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\"",
     "test": "vitest run",
-    "coverage": "rimraf coverage && npm run test && c8 report --reporter=html"
+    "coverage": "rimraf coverage && npm run test && c8 report --reporter=lcov --reporter=html"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.16.0",
