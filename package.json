@@ -25,9 +25,9 @@
     "coverage": "rimraf coverage && npm run test && c8 report --reporter=lcov --reporter=html"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.16.0",
+    "@modelcontextprotocol/sdk": "^1.17.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.0",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "nanoid": "^5.1.5",
     "node-fetch": "^3.3.2",
