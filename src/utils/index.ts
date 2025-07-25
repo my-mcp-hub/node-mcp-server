@@ -11,9 +11,6 @@ export function getOptions(
   return {
     name: pkg.name,
     version: pkg.version,
-    url: argv.url,
-    key: argv.key,
-    secretKey: argv.secret_key,
     port: argv.port,
   } as OptionsType
 }
