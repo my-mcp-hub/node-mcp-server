@@ -22,7 +22,8 @@
     "dev:stdio": "cross-env NODE_ENV=local concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\"",
     "dev:web": "cross-env NODE_ENV=local TRANSPORT=web concurrently \"tsc --noEmit --watch\" \"node scripts/dev.js\"",
     "test": "vitest run",
-    "coverage": "rimraf coverage && npm run test && c8 report --reporter=lcov --reporter=html",
+    "report": "c8 report --reporter=lcov --reporter=html",
+    "coverage": "rimraf coverage && npm run test && npm run report",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 -n changelog-option.js"
   },
   "dependencies": {
