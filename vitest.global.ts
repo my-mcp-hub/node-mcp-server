@@ -15,7 +15,6 @@ export default async function setup() {
     if (output.includes('MCP server started')) {
       webStarted = true
     }
-    console.log(output)
   });
   await waitForValue(() => webStarted)
   return () => {
