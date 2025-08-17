@@ -20,9 +20,7 @@ const stdioClientTransport = new StdioClientTransport({
 await client.connect(stdioClientTransport)
 
 const streamableBaseUrl = new URL('http://localhost:8401/mcp')
-const streamableClientTransport = new StreamableHTTPClientTransport(
-  new URL(streamableBaseUrl)
-)
+const streamableClientTransport = new StreamableHTTPClientTransport(new URL(streamableBaseUrl))
 await client.connect(streamableClientTransport)
 
 const sseBaseUrl = new URL('http://localhost:8401/sse')
