@@ -27,7 +27,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 -n changelog-option.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.5",
+    "@modelcontextprotocol/sdk": "^1.18.0",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "nanoid": "^5.1.5",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@modelcontextprotocol/inspector": "^0.16.6",
+    "@modelcontextprotocol/inspector": "^0.16.7",
     "@types/express": "^5.0.3",
     "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
