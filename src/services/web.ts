@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
-import express from 'express'
+import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify'
+import cors from '@fastify/cors'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
@@ -7,20 +8,23 @@ import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
 import type { OptionsType } from '@/types'
 
 export async function webServer(server: McpServer, options: OptionsType) {
-  const app = express()
-  app.use(express.json())
+  const app = Fastify({
+    logger: true,
+  })
+
+  await app.register(cors, {})
 
   const transports = {
     streamable: {} as Record<string, StreamableHTTPServerTransport>,
     sse: {} as Record<string, SSEServerTransport>,
   }
-  app.post('/mcp', async (req, res) => {
-    const sessionId = req.headers['mcp-session-id'] as string | undefined
+  app.post('/mcp', async (request, reply) => {
+    const sessionId = request.headers['mcp-session-id'] as string | undefined
     let transport: StreamableHTTPServerTransport
 
     if (sessionId && transports.streamable[sessionId]) {
       transport = transports.streamable[sessionId]
-    } else if (!sessionId && isInitializeRequest(req.body)) {
+    } else if (!sessionId && isInitializeRequest(request.body)) {
       transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: () => nanoid(),
         onsessioninitialized: sessionId => {
@@ -35,7 +39,7 @@ export async function webServer(server: McpServer, options: OptionsType) {
       }
       await server.connect(transport)
     } else {
-      res.status(400).json({
+      reply.status(400).send({
         jsonrpc: '2.0',
         error: {
           code: -32000,
@@ -46,45 +50,50 @@ export async function webServer(server: McpServer, options: OptionsType) {
       return
     }
 
-    await transport.handleRequest(req, res, req.body)
+    await transport.handleRequest(request.raw, reply.raw, request.body)
   })
 
-  const handleSessionRequest = async (req: express.Request, res: express.Response) => {
-    const sessionId = req.headers['mcp-session-id'] as string | undefined
+  const handleSessionRequest = async (request: FastifyRequest, reply: FastifyReply) => {
+    const sessionId = request.headers['mcp-session-id'] as string | undefined
     if (!sessionId || !transports.streamable[sessionId]) {
-      res.status(400).send('Invalid or missing session ID')
+      reply.status(400).send('Invalid or missing session ID')
       return
     }
 
     const transport = transports.streamable[sessionId]
-    await transport.handleRequest(req, res)
+    await transport.handleRequest(request.raw, reply.raw)
   }
 
   app.get('/mcp', handleSessionRequest)
 
   app.delete('/mcp', handleSessionRequest)
 
-  app.get('/sse', async (req, res) => {
-    const transport = new SSEServerTransport('/messages', res)
+  app.get('/sse', async (_request, reply) => {
+    const transport = new SSEServerTransport('/messages', reply.raw)
     transports.sse[transport.sessionId] = transport
 
-    res.on('close', () => {
+    reply.raw.on('close', () => {
       delete transports.sse[transport.sessionId]
     })
 
     await server.connect(transport)
   })
 
-  app.post('/messages', async (req, res) => {
-    const sessionId = req.query.sessionId as string
+  app.post('/messages', async (request, reply) => {
+    const { sessionId } = request.query as { sessionId: string }
     const transport = transports.sse[sessionId]
     if (transport) {
-      await transport.handlePostMessage(req, res, req.body)
+      await transport.handlePostMessage(request.raw, reply.raw, request.body)
     } else {
-      res.status(400).send('No transport found for sessionId')
+      reply.status(400).send('No transport found for sessionId')
     }
   })
 
-  app.listen(options.port)
-  console.log(`MCP server started on port ${options.port}. SSE endpoint: /sse, streamable endpoint: /mcp`)
+  app.listen({ port: options.port }, (err, address) => {
+    if (err) {
+      app.log.error(err)
+      process.exit(1)
+    }
+    console.log(`MCP server started on ${address}. SSE endpoint: /sse, streamable endpoint: /mcp`)
+  })
 }
