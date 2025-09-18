@@ -1,10 +1,10 @@
-import { nanoid } from 'nanoid'
 import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify'
 import cors from '@fastify/cors'
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
+import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js'
+import { generateSessionId } from '@/utils'
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { OptionsType } from '@/types'
 
 export async function webServer(server: McpServer, options: OptionsType) {
@@ -26,7 +26,7 @@ export async function webServer(server: McpServer, options: OptionsType) {
       transport = transports.streamable[sessionId]
     } else if (!sessionId && isInitializeRequest(request.body)) {
       transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: () => nanoid(),
+        sessionIdGenerator: () => generateSessionId(),
         onsessioninitialized: sessionId => {
           transports.streamable[sessionId] = transport
         },
