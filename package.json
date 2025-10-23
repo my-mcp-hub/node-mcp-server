@@ -38,7 +38,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "@modelcontextprotocol/inspector": "^0.17.1",
+    "@modelcontextprotocol/inspector": "^0.17.2",
     "@prettier/plugin-oxc": "^0.0.4",
     "@types/express": "^5.0.3",
     "@types/yargs": "^17.0.33",
@@ -55,7 +55,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.5",
+    "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "tree-kill": "^1.2.2",
