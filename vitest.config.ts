@@ -17,7 +17,7 @@ export default defineConfig({
       threads: {
         maxThreads: 1,
         minThreads: 1,
-      }
+      },
     },
   },
 })
