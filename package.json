@@ -42,7 +42,7 @@
     "@prettier/plugin-oxc": "^0.0.4",
     "@types/express": "^5.0.5",
     "@types/yargs": "^17.0.35",
-    "@vitest/coverage-v8": "^4.0.10",
+    "@vitest/coverage-v8": "^4.0.13",
     "c8": "^10.1.3",
     "compare-func": "^2.0.0",
     "concurrently": "^9.2.1",
@@ -55,14 +55,14 @@
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.6",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.6.2",
-    "rimraf": "^6.1.0",
+    "rimraf": "^6.1.2",
     "tree-kill": "^1.2.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0",
-    "vitest": "^4.0.10"
+    "vitest": "^4.0.13"
   },
   "repository": {
     "type": "git",
