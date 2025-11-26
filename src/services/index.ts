@@ -6,7 +6,7 @@ import { stdioServer } from './stdio'
 import { webServer } from './web'
 import type { OptionsType } from '@/types'
 
-const createServer = (options: OptionsType) => {
+export const createServer = (options: OptionsType) => {
   const server = new McpServer({
     name: options.name,
     version: options.version,

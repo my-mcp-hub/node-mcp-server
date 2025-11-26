@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js'
+import { createServer } from '@/services'
 import { generateSessionId } from '@/utils'
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { OptionsType } from '@/types'
@@ -72,10 +73,16 @@ export async function webServer(server: McpServer, options: OptionsType) {
     const transport = new SSEServerTransport('/messages', reply.raw)
     transports.sse[transport.sessionId] = transport
 
+    const interval = setInterval(() => {
+      reply.raw.write(`event: ping\ndata: {"time":"${new Date().toISOString()}"}\n\n`)
+    }, 15000)
+
     reply.raw.on('close', () => {
       delete transports.sse[transport.sessionId]
+      clearInterval(interval)
     })
 
+    const server = createServer(options)
     await server.connect(transport)
   })
 
