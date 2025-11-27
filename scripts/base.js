@@ -1,7 +1,6 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { promises as fs } from 'fs'
-import { spawn } from 'child_process'
+import { spawn } from 'node:child_process'
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
 import { rimraf } from 'rimraf'
 import kill from 'tree-kill'
 
@@ -23,7 +22,7 @@ export const config = {
   platform: 'node',
   external: ['yargs', 'fastify', '@fastify/cors', 'nanoid', 'zod', 'dotenv', '@modelcontextprotocol/sdk'],
   alias: {
-    '@': path.resolve(__dirname, '../src'),
+    '@': path.resolve(dirname, '../src'),
   },
   plugins: [
     {
