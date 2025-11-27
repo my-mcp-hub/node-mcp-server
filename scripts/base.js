@@ -5,7 +5,7 @@ import { spawn } from 'child_process'
 import { rimraf } from 'rimraf'
 import kill from 'tree-kill'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const dirname = import.meta.dirname
 const isProd = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'local'
 let inspectorProcess = null
@@ -14,8 +14,8 @@ let autoOpenBrowser = true
 
 /** @type {import('esbuild').BuildOptions} */
 export const config = {
-  entryPoints: [path.resolve(__dirname, '../src/index.ts')],
-  outfile: path.resolve(__dirname, '../build/index.js'),
+  entryPoints: [path.resolve(dirname, '../src/index.ts')],
+  outfile: path.resolve(dirname, '../build/index.js'),
   format: 'esm',
   bundle: true,
   sourcemap: isDev,
