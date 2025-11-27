@@ -1,3 +1,3 @@
 export default {
-  'src/**/*.{ts,js}': ['npx eslint'],
+  'src/**/*.{ts,js}': ['biome check --write'],
 }
