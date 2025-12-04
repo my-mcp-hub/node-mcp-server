@@ -40,7 +40,6 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@modelcontextprotocol/inspector": "^0.17.2",
-    "@prettier/plugin-oxc": "^0.0.4",
     "@types/express": "^5.0.6",
     "@types/yargs": "^17.0.35",
     "@vitest/coverage-v8": "^4.0.15",
