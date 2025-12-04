@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^11.1.0",
-    "@modelcontextprotocol/sdk": "^1.23.0",
+    "@modelcontextprotocol/sdk": "^1.24.2",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
     "nanoid": "^5.1.6",
@@ -41,9 +41,9 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@modelcontextprotocol/inspector": "^0.17.2",
     "@prettier/plugin-oxc": "^0.0.4",
-    "@types/express": "^5.0.5",
+    "@types/express": "^5.0.6",
     "@types/yargs": "^17.0.35",
-    "@vitest/coverage-v8": "^4.0.14",
+    "@vitest/coverage-v8": "^4.0.15",
     "c8": "^10.1.3",
     "compare-func": "^2.0.0",
     "concurrently": "^9.2.1",
@@ -57,13 +57,13 @@
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.7.3",
+    "prettier": "^3.7.4",
     "rimraf": "^6.1.2",
     "tree-kill": "^1.2.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.0",
-    "vitest": "^4.0.14"
+    "typescript-eslint": "^8.48.1",
+    "vitest": "^4.0.15"
   },
   "repository": {
     "type": "git",
