@@ -4,25 +4,36 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     if: github.repository == 'my-mcp-hub/node-mcp-server'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Install Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install Package
-        run: npm i
+        run: npm ci
 
       - name: Lint
         run: npm run lint
@@ -33,5 +44,12 @@ jobs:
       - name: Test Package
         run: npm run coverage
 
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
+      - name: Validate Package Contents
+        run: npm pack --dry-run --ignore-scripts
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

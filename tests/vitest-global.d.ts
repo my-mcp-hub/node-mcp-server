@@ -1,5 +1,5 @@
-import type { Client } from '@modelcontextprotocol/sdk/client/index.js'
+import type { Client } from '@modelcontextprotocol/client'
 
 declare global {
-  var client: Client
+  var clients: Record<'stdio' | 'streamable', Client>
 }

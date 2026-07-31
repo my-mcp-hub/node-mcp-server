@@ -25,7 +25,7 @@ const argv = await yargs()
   )
   .options({
     port: {
-      describe: 'Specify the port for SSE or streamable transport (default: 8401)',
+      describe: 'Specify the port for Streamable HTTP transport (default: 8401)',
       type: 'string',
       default: process.env.PORT || '8401',
     },

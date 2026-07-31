@@ -4,14 +4,12 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default [
+  {
+    ignores: ['**/build', '**/coverage', '**/node_modules', '**/.*', '**/*.d.ts', '.husky/'],
+  },
   ...tseslint.configs.recommended,
   {
-    ignores: ['**/build', '**/node_modules', '**/.*', '**/*.d.ts', '.husky/'],
-  },
-  {
-    files: ['src/**/*.{js,ts}', 'tests/**/*.{js,ts}'],
-  },
-  {
+    files: ['src/**/*.{js,ts}', 'tests/**/*.{js,ts}', 'scripts/**/*.js', '*.{js,ts}'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {

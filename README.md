@@ -1,6 +1,6 @@
 # Node.js MCP Server Template
 
-A Model Context Protocol (MCP) server template for Node.js applications. This template provides a foundation for building MCP-compatible servers with support for multiple transport protocols.
+A Fastify-based MCP TypeScript SDK 2.0 server template using the `2026-07-28` protocol over stdio and Streamable HTTP.
 
 [![][npm-release-shield]][npm-release-link]
 [![][codecov-shield]][codecov-link]
@@ -8,98 +8,76 @@ A Model Context Protocol (MCP) server template for Node.js applications. This te
 [![][github-action-build-shield]][github-action-build-link]
 [![][github-license-shield]][github-license-link]
 
-## Features
-- Multiple Transport Protocols :
+The built-in knowledge-base example demonstrates how the three server primitives work together:
 
-    - Standard I/O (stdio) for command-line interfaces
-    - HTTP Streamable transport for web applications
-    - Server-Sent Events (SSE) for real-time updates
-- TypeScript Support : Built with TypeScript for type safety and better developer experience
-- Development Tools :
+1. Call the `search_documents` Tool to find one of three MCP guides.
+2. Read the returned `kb://documents/{documentId}` Resource URI.
+3. Get the `review_document` Prompt to review the same document.
 
-    - Hot reloading during development
-    - Integration with MCP Inspector for debugging
-    - ESLint and Prettier for code quality
-    - Husky and lint-staged for Git hooks
-- Extensible Tool System : Easy registration of custom MCP tools
+The example is deterministic and has no external data dependency. Tool results include both
+`structuredContent` and text content, resources are Markdown documents with stable URIs, and missing
+resources return a protocol-level Resource Not Found error.
 
-## Prerequisites
-- Node.js (latest LTS version recommended)
-- npm or yarn
-
-## Installation
-
-```bash
-npm install
-```
+The HTTP endpoint uses `@modelcontextprotocol/fastify` with Fastify 5. Its default localhost binding
+validates `Host` and `Origin` headers to protect local development servers from DNS rebinding.
 
 ## Development
-```bash
-# Start development server with stdio transport
-npm run dev
 
-# Start development server with web transport
+Requires Node.js 22 and npm 10. The repository's `.nvmrc`, `packageManager`, and `package-lock.json`
+define the supported local and CI toolchain.
+
+```bash
+nvm use
+npm ci
+npm run dev:stdio
+```
+
+Run the Streamable HTTP transport on `http://localhost:8401/mcp`:
+
+```bash
 npm run dev:web
 ```
 
-When using dev:web , the server will be available at:
+Run the same verification stages used by CI:
 
-- Streamable HTTP endpoint: http://localhost:8401/mcp
-- SSE endpoint: http://localhost:8401/sse
-
-## Building
 ```bash
-npm run build
+npm run check
 ```
-The build output will be in the build directory.
+
+The individual stages are also available as `npm run lint`, `npm run typecheck`, `npm run build`,
+`npm test`, and `npm run coverage`. The production build is a minified Node.js 22 ESM executable at
+`build/index.js`.
+
+Inspect the npm package before publishing:
+
+```bash
+npm pack --dry-run
+```
 
 ## Usage
-### Command Line
+
 ```bash
 # Start with stdio transport (default)
 node build/index.js
 
-# Start with web transport
+# Start with Streamable HTTP
 node build/index.js web --port 8401
-```
-### Adding Custom Tools
-Custom tools can be added in the src/tools/index.ts file:
-
-```ts
-server.registerTool(
-  'YourToolName',
-  {
-    title: 'Your Tool Name',
-    description: 'Tool description',
-    inputSchema: {
-      param1: z.string().describe('Parameter description'),
-    },
-  },
-  ({ param1 }) => {
-    // Implement tool logic
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Your tool response: ${param1}`,
-        },
-      ],
-    }
-  },
-)
 ```
 
 ## Environment Variables
-- PORT : Specify the port for web transport (default: 8401)
-- NODE_ENV : Set to production for production builds or local for development
+
+- `PORT`: Streamable HTTP port (default: `8401`)
+- `NODE_ENV`: `production` for production builds or `local` for development
+- `MCP_INSPECTOR_API_TOKEN`: optional stable token for the MCP Inspector development session
 
 ## License
+
 [MIT](LICENSE)
 
 [npm-release-link]: https://www.npmjs.com/package/@my-mcp-hub/node-mcp-server
 [npm-release-shield]: https://img.shields.io/npm/v/@my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[codecov-link]: https://coveralls.io/github/my-mcp-hub/node-mcp-server?branch=main
-[codecov-shield]: https://img.shields.io/coverallsCoverage/github/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&style=flat-square&logo=codecov&logoColor=white
+[codecov-link]: https://codecov.io/gh/my-mcp-hub/node-mcp-server
+[codecov-shield]: https://img.shields.io/codecov/c/github/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&style=flat-square&logo=codecov&logoColor=white
 [github-release-date-link]: https://github.com/my-mcp-hub/node-mcp-server/releases
 [github-release-date-shield]: https://img.shields.io/github/release-date/my-mcp-hub/node-mcp-server?color=1677FF&labelColor=black&style=flat-square
 [github-action-build-link]: https://github.com/my-mcp-hub/node-mcp-server/actions/workflows/build.yml

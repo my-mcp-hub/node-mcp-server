@@ -7,6 +7,7 @@ export default defineConfig({
     },
   },
   test: {
+    testTimeout: 30000,
     globalSetup: ['./vitest.global.ts'],
     setupFiles: ['./vitest.setup.ts'],
     coverage: {

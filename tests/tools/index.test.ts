@@ -1,42 +1,64 @@
 import { describe, expect, test } from 'vitest'
 
-describe('getDataTool', () => {
-  test('returns data for a valid input', async () => {
+describe('searchDocumentsTool', () => {
+  test.each(Object.entries(global.clients))('returns structured document matches over %s', async (_name, client) => {
     expect(
-      await global.client.callTool({
-        name: 'GetData',
+      await client.callTool({
+        name: 'search_documents',
         arguments: {
-          keyword: 'test',
+          query: 'transport session',
+          limit: 1,
         },
       }),
-    ).toStrictEqual({
-      content: [{ type: 'text', text: 'keyword: test;' }],
+    ).toMatchObject({
+      content: [
+        {
+          type: 'text',
+          text: expect.stringContaining('kb://documents/transport-and-lifecycle'),
+        },
+      ],
+      structuredContent: {
+        matches: [
+          {
+            id: 'transport-and-lifecycle',
+            title: 'MCP Transports and Server Lifecycle',
+            uri: 'kb://documents/transport-and-lifecycle',
+          },
+        ],
+      },
     })
   })
 
-  test('returns a "not found" response for an unrecognized input', async () => {
-    expect(
-      await global.client.callTool({
-        name: 'GetData',
-        arguments: {
-          keyword: 'error',
-        },
-      }),
-    ).toStrictEqual({
-      content: [{ type: 'text', text: 'not found' }],
+  test.each(
+    Object.entries(global.clients),
+  )('returns an empty successful result when nothing matches over %s', async (_name, client) => {
+    const result = await client.callTool({
+      name: 'search_documents',
+      arguments: {
+        query: 'unmatched-keyword',
+      },
     })
+    expect(result).toMatchObject({
+      structuredContent: {
+        matches: [],
+      },
+    })
+    expect(result.isError).not.toBe(true)
   })
 
-  test('returns a "not found" response for empty input', async () => {
-    expect(
-      await global.client.callTool({
-        name: 'GetData',
-        arguments: {
-          keyword: '',
-        },
+  test.each(Object.entries(global.clients))('advertises the tool schema over %s', async (_name, client) => {
+    const { tools } = await client.listTools()
+    expect(tools).toContainEqual(
+      expect.objectContaining({
+        name: 'search_documents',
+        outputSchema: expect.objectContaining({
+          type: 'object',
+        }),
+        annotations: expect.objectContaining({
+          readOnlyHint: true,
+          idempotentHint: true,
+        }),
       }),
-    ).toStrictEqual({
-      content: [{ type: 'text', text: 'not found' }],
-    })
+    )
   })
 })

@@ -1,28 +1,34 @@
 import { spawn } from 'node:child_process'
+import { randomBytes } from 'node:crypto'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { rimraf } from 'rimraf'
 import kill from 'tree-kill'
 
 const dirname = import.meta.dirname
+const projectRoot = path.resolve(dirname, '..')
 const isProd = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'local'
 let inspectorProcess = null
 let webProcess = null
 let autoOpenBrowser = true
+const inspectorApiToken = process.env.MCP_INSPECTOR_API_TOKEN ?? randomBytes(32).toString('hex')
 
 /** @type {import('esbuild').BuildOptions} */
 export const config = {
-  entryPoints: [path.resolve(dirname, '../src/index.ts')],
-  outfile: path.resolve(dirname, '../build/index.js'),
+  absWorkingDir: projectRoot,
+  entryPoints: [path.resolve(projectRoot, 'src/index.ts')],
+  outfile: path.resolve(projectRoot, 'build/index.js'),
   format: 'esm',
   bundle: true,
   sourcemap: isDev,
   minify: isProd,
   platform: 'node',
-  external: ['yargs', 'fastify', '@fastify/cors', 'nanoid', 'zod', 'dotenv', '@modelcontextprotocol/sdk'],
+  target: 'node22',
+  packages: 'external',
+  legalComments: 'none',
   alias: {
-    '@': path.resolve(dirname, '../src'),
+    '@': path.resolve(projectRoot, 'src'),
   },
   plugins: [
     {
@@ -40,46 +46,51 @@ export const config = {
 }
 
 const before = async () => {
-  await rimraf('build')
+  await rimraf(path.resolve(projectRoot, 'build'))
 }
 
 const after = async result => {
-  await fs.chmod('build/index.js', 0o755)
-  console.log('✅ chmod 755 build/index.js done')
-  if (isDev) {
-    if (result.errors.length === 0) {
-      console.log('✅ Rebuild succeeded')
-    } else {
-      console.error('❌ Rebuild failed')
-    }
+  if (result.errors.length > 0) {
+    console.error('❌ Build failed')
+    return
+  }
 
-    console.log('🚀 Starting @modelcontextprotocol/inspector...')
-    if (inspectorProcess) {
-      kill(inspectorProcess.pid, 'SIGINT')
-      // inspectorProcess.kill('SIGINT')
-    }
-    inspectorProcess = spawn(
-      'npx',
-      ['@modelcontextprotocol/inspector', '--config', './src/assets/mcp.json', '--server', 'mcp-stdio'],
-      {
-        stdio: 'inherit',
-        shell: true,
-        env: {
-          ...process.env,
-          DANGEROUSLY_OMIT_AUTH: true,
-          MCP_AUTO_OPEN_ENABLED: autoOpenBrowser,
-        },
-      },
-    )
-    autoOpenBrowser = false
+  const outputFile = path.resolve(projectRoot, 'build/index.js')
+  await fs.chmod(outputFile, 0o755)
+  console.log('✅ chmod 755 build/index.js done')
+
+  if (isDev) {
+    console.log('✅ Rebuild succeeded')
+
+    const inspectorConfig =
+      process.env.TRANSPORT === 'web'
+        ? path.resolve(projectRoot, 'src/assets/mcp.http.json')
+        : path.resolve(projectRoot, 'src/assets/mcp.stdio.json')
 
     if (process.env.TRANSPORT === 'web') {
       if (webProcess) {
         webProcess.kill('SIGINT')
       }
-      webProcess = spawn('node', ['build/index.js', 'web'], {
+      webProcess = spawn(process.execPath, [outputFile, 'web'], {
+        cwd: projectRoot,
         stdio: 'inherit',
       })
     }
+
+    console.log('🚀 Starting @modelcontextprotocol/inspector...')
+    if (inspectorProcess) {
+      kill(inspectorProcess.pid, 'SIGINT')
+    }
+    inspectorProcess = spawn('npx', ['@modelcontextprotocol/inspector', '--web', '--config', inspectorConfig], {
+      cwd: projectRoot,
+      stdio: 'inherit',
+      shell: true,
+      env: {
+        ...process.env,
+        MCP_INSPECTOR_API_TOKEN: inspectorApiToken,
+        MCP_AUTO_OPEN_ENABLED: String(autoOpenBrowser),
+      },
+    })
+    autoOpenBrowser = false
   }
 }

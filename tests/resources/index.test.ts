@@ -1,18 +1,48 @@
 import { describe, expect, test } from 'vitest'
 
-describe('searchResource', () => {
-  test('should return correct resource content for a valid URI', async () => {
+describe('knowledgeDocumentResource', () => {
+  test.each(Object.entries(global.clients))('lists all three documents over %s', async (_name, client) => {
+    const { resources } = await client.listResources()
+    expect(resources).toHaveLength(3)
+    expect(resources.map(resource => resource.uri)).toEqual([
+      'kb://documents/mcp-overview',
+      'kb://documents/transport-and-lifecycle',
+      'kb://documents/schema-and-errors',
+    ])
+    expect(resources[0].annotations).toMatchObject({
+      audience: ['user', 'assistant'],
+      lastModified: '2026-07-27T00:00:00.000Z',
+    })
+  })
+
+  test.each(Object.entries(global.clients))('reads a Markdown document over %s', async (_name, client) => {
     expect(
-      await global.client.readResource({
-        uri: 'search://hello',
+      await client.readResource({
+        uri: 'kb://documents/transport-and-lifecycle',
       }),
-    ).toStrictEqual({
+    ).toMatchObject({
       contents: [
         {
-          uri: 'search://hello',
-          text: 'search hello',
+          uri: 'kb://documents/transport-and-lifecycle',
+          mimeType: 'text/markdown',
+          text: expect.stringContaining('# MCP Transports and Server Lifecycle'),
         },
       ],
+    })
+  })
+
+  test.each(
+    Object.entries(global.clients),
+  )('returns a protocol error for an unknown document over %s', async (_name, client) => {
+    await expect(
+      client.readResource({
+        uri: 'kb://documents/unknown',
+      }),
+    ).rejects.toMatchObject({
+      code: -32602,
+      data: {
+        uri: 'kb://documents/unknown',
+      },
     })
   })
 })

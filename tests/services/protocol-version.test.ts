@@ -1,0 +1,7 @@
+import { describe, expect, test } from 'vitest'
+
+describe('transports', () => {
+  test.each(Object.entries(global.clients))('uses the 2026-07-28 protocol over %s', (_name, client) => {
+    expect(client.getNegotiatedProtocolVersion()).toBe('2026-07-28')
+  })
+})

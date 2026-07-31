@@ -1,106 +1,37 @@
-import cors from '@fastify/cors'
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
-import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js'
-import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify'
+import { createMcpFastifyApp } from '@modelcontextprotocol/fastify'
+import { toNodeHandler } from '@modelcontextprotocol/node'
+import { createMcpHandler } from '@modelcontextprotocol/server'
 import { createServer } from '@/services'
 import type { OptionsType } from '@/types'
-import { generateSessionId } from '@/utils'
 
-export async function webServer(server: McpServer, options: OptionsType) {
-  const app = Fastify({
-    logger: true,
-  })
+export async function webServer(options: OptionsType) {
+  const app = createMcpFastifyApp()
+  const handler = createMcpHandler(() => createServer(options))
+  const nodeHandler = toNodeHandler(handler)
 
-  await app.register(cors, {})
+  app.all('/mcp', (request, reply) => nodeHandler(request.raw, reply.raw, request.body))
 
-  const transports = {
-    streamable: {} as Record<string, StreamableHTTPServerTransport>,
-    sse: {} as Record<string, SSEServerTransport>,
-  }
-  app.post('/mcp', async (request, reply) => {
-    const sessionId = request.headers['mcp-session-id'] as string | undefined
-    let transport: StreamableHTTPServerTransport
+  await app.listen({ port: options.port })
+  let closing: Promise<void> | undefined
 
-    if (sessionId && transports.streamable[sessionId]) {
-      transport = transports.streamable[sessionId]
-    } else if (!sessionId && isInitializeRequest(request.body)) {
-      transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: () => generateSessionId(),
-        onsessioninitialized: sessionId => {
-          transports.streamable[sessionId] = transport
-        },
-      })
-
-      transport.onclose = () => {
-        if (transport.sessionId) {
-          delete transports.streamable[transport.sessionId]
-        }
-      }
-      await server.connect(transport)
-    } else {
-      reply.status(400).send({
-        jsonrpc: '2.0',
-        error: {
-          code: -32000,
-          message: 'Bad Request: No valid session ID provided',
-        },
-        id: null,
-      })
-      return
-    }
-
-    await transport.handleRequest(request.raw, reply.raw, request.body)
-  })
-
-  const handleSessionRequest = async (request: FastifyRequest, reply: FastifyReply) => {
-    const sessionId = request.headers['mcp-session-id'] as string | undefined
-    if (!sessionId || !transports.streamable[sessionId]) {
-      reply.status(400).send('Invalid or missing session ID')
-      return
-    }
-
-    const transport = transports.streamable[sessionId]
-    await transport.handleRequest(request.raw, reply.raw)
+  const close = () => {
+    closing ??= (async () => {
+      const appClosed = app.close()
+      await handler.close()
+      await appClosed
+    })()
+    return closing
   }
 
-  app.get('/mcp', handleSessionRequest)
-
-  app.delete('/mcp', handleSessionRequest)
-
-  app.get('/sse', async (_request, reply) => {
-    const transport = new SSEServerTransport('/messages', reply.raw)
-    transports.sse[transport.sessionId] = transport
-
-    const interval = setInterval(() => {
-      reply.raw.write(`event: ping\ndata: {"time":"${new Date().toISOString()}"}\n\n`)
-    }, 15000)
-
-    reply.raw.on('close', () => {
-      delete transports.sse[transport.sessionId]
-      clearInterval(interval)
+  const shutdown = () => {
+    close().catch(error => {
+      console.error('Failed to close MCP web server', error)
+      process.exitCode = 1
     })
+  }
 
-    const server = createServer(options)
-    await server.connect(transport)
-  })
+  process.once('SIGINT', shutdown)
+  process.once('SIGTERM', shutdown)
 
-  app.post('/messages', async (request, reply) => {
-    const { sessionId } = request.query as { sessionId: string }
-    const transport = transports.sse[sessionId]
-    if (transport) {
-      await transport.handlePostMessage(request.raw, reply.raw, request.body)
-    } else {
-      reply.status(400).send('No transport found for sessionId')
-    }
-  })
-
-  app.listen({ port: options.port }, (err, address) => {
-    if (err) {
-      app.log.error(err)
-      process.exit(1)
-    }
-    console.log(`MCP server started on ${address}. SSE endpoint: /sse, streamable endpoint: /mcp`)
-  })
+  console.log(`MCP server started on port ${options.port}. Streamable HTTP endpoint: /mcp`)
 }

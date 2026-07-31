@@ -1,21 +1,60 @@
 import { describe, expect, test } from 'vitest'
 
-describe('echoPrompt', () => {
-  test('should return correct prompt content for a valid argument', async () => {
+describe('reviewDocumentPrompt', () => {
+  test.each(Object.entries(global.clients))('completes document identifiers over %s', async (_name, client) => {
     expect(
-      await global.client.getPrompt({
-        name: 'echo',
-        arguments: {
-          message: 'hello',
+      await client.complete({
+        ref: {
+          type: 'ref/prompt',
+          name: 'review_document',
+        },
+        argument: {
+          name: 'documentId',
+          value: 'mcp',
         },
       }),
-    ).toStrictEqual({
+    ).toMatchObject({
+      completion: {
+        values: ['mcp-overview'],
+      },
+    })
+  })
+
+  test.each(
+    Object.entries(global.clients),
+  )('returns instructions and an embedded document over %s', async (_name, client) => {
+    expect(
+      await client.getPrompt({
+        name: 'review_document',
+        arguments: {
+          documentId: 'schema-and-errors',
+          focus: 'risks',
+        },
+      }),
+    ).toMatchObject({
       messages: [
         {
           role: 'user',
           content: {
             type: 'text',
-            text: 'Please process this message: hello',
+            text: expect.stringContaining(
+              'Identify incorrect usage risks, ambiguous guidance, and likely implementation mistakes.',
+            ),
+          },
+        },
+        {
+          role: 'user',
+          content: {
+            type: 'resource',
+            annotations: {
+              audience: ['user', 'assistant'],
+              lastModified: '2026-07-27T00:00:00.000Z',
+            },
+            resource: {
+              uri: 'kb://documents/schema-and-errors',
+              mimeType: 'text/markdown',
+              text: expect.stringContaining('# MCP Schemas, Structured Content, and Error Handling'),
+            },
           },
         },
       ],

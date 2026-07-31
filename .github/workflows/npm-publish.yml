@@ -4,36 +4,67 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     if: github.repository == 'my-mcp-hub/node-mcp-server'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Install Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org/
-          cache: npm
+          package-manager-cache: false
 
       - name: Install Package
-        run: npm i
+        run: npm ci
 
       - name: Lint
         run: npm run lint
 
-      - name: Build Package
-        run: npm run build
+      - name: Test Package
+        run: npm run coverage
+
+      - name: Pack Package
+        run: npm pack
+
+      - name: Upload Package Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: npm-package
+          path: my-mcp-hub-node-mcp-server-*.tgz
+
+  publish:
+    if: github.repository == 'my-mcp-hub/node-mcp-server'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download Package Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: npm-package
+          path: .
+
+      - name: Install Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
 
       - name: Publish NPM Package
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        run: npm publish ./*.tgz --provenance --access public
