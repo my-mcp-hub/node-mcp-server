@@ -9,10 +9,25 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
   "include": ["src", "tests", "vitest.config.ts", "vitest.global.ts", "vitest.setup.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true,
+    "fileExtensions": {
+      "inputGlob": "{js,jsx,mjs}",
+      "outputCheck": ["js", "json", "jsx", "mjs"]
+    },
+    "replacers": {
+      "alias": {
+        "enabled": true,
+        "file": "./scripts/aliasReplacer.cjs"
+      }
+    }
+  }
 }

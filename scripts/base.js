@@ -2,12 +2,13 @@ import { spawn } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
+import { globSync } from 'glob'
 import { rimraf } from 'rimraf'
 import kill from 'tree-kill'
+import { replaceTscAliasPaths } from 'tsc-alias'
 
 const dirname = import.meta.dirname
 const projectRoot = path.resolve(dirname, '..')
-const isProd = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'local'
 let inspectorProcess = null
 let webProcess = null
@@ -17,19 +18,19 @@ const inspectorApiToken = process.env.MCP_INSPECTOR_API_TOKEN ?? randomBytes(32)
 /** @type {import('esbuild').BuildOptions} */
 export const config = {
   absWorkingDir: projectRoot,
-  entryPoints: [path.resolve(projectRoot, 'src/index.ts')],
-  outfile: path.resolve(projectRoot, 'build/index.js'),
+  entryPoints: globSync('src/**/*.ts', {
+    cwd: projectRoot,
+    absolute: true,
+  }),
+  outbase: path.resolve(projectRoot, 'src'),
+  outdir: path.resolve(projectRoot, 'build'),
   format: 'esm',
-  bundle: true,
+  bundle: false,
   sourcemap: isDev,
-  minify: isProd,
+  minify: false,
   platform: 'node',
   target: 'node22',
-  packages: 'external',
   legalComments: 'none',
-  alias: {
-    '@': path.resolve(projectRoot, 'src'),
-  },
   plugins: [
     {
       name: 'build-plugin',
@@ -54,6 +55,10 @@ const after = async result => {
     console.error('❌ Build failed')
     return
   }
+
+  await replaceTscAliasPaths({
+    configFile: path.resolve(projectRoot, 'tsconfig.json'),
+  })
 
   const outputFile = path.resolve(projectRoot, 'build/index.js')
   await fs.chmod(outputFile, 0o755)

@@ -45,8 +45,9 @@ npm run check
 ```
 
 The individual stages are also available as `npm run lint`, `npm run typecheck`, `npm run build`,
-`npm test`, and `npm run coverage`. The production build is a minified Node.js 22 ESM executable at
-`build/index.js`.
+`npm test`, and `npm run coverage`. The production build preserves the source module layout as
+Node.js 22 ESM under `build`; `build/index.js` remains the executable entrypoint. Build-time aliases
+are rewritten to relative `.js` imports so the output runs directly in Node.js.
 
 Inspect the npm package before publishing:
 
