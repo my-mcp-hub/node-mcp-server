@@ -14,7 +14,6 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "build/index.js",
   "scripts": {
     "clean": "rimraf build coverage",
     "typecheck": "tsc --noEmit",
