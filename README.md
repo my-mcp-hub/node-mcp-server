@@ -35,8 +35,11 @@ npm run dev:stdio
 Run the Streamable HTTP transport on `http://localhost:8401/mcp`:
 
 ```bash
+cp .env.example .env
 npm run dev:web
 ```
+
+The local `.env` file is ignored by Git. `PORT` and `--port` must resolve to an integer from `1` to `65535`.
 
 Run the same verification stages used by CI:
 
