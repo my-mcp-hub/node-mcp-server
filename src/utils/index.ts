@@ -1,16 +1,32 @@
-import type { ArgumentsCamelCase } from 'yargs'
-import type { OptionsType } from '@/types'
+import type { ServerOptions, WebServerOptions } from '@/types'
 
-export function getOptions(
-  argv: ArgumentsCamelCase,
-  pkg: {
-    name: string
-    version: string
-  },
-) {
+export const DEFAULT_PORT = 8401
+
+interface ServerIdentity {
+  name: string
+  version: string
+}
+
+export function getServerOptions(identity: ServerIdentity): ServerOptions {
   return {
-    name: pkg.name,
-    version: pkg.version,
-    port: argv.port,
-  } as OptionsType
+    name: identity.name,
+    version: identity.version,
+  }
+}
+
+export function parsePort(value: unknown): number {
+  const port = typeof value === 'number' ? value : typeof value === 'string' && value.trim() ? Number(value) : NaN
+
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new TypeError('Port must be an integer between 1 and 65535.')
+  }
+
+  return port
+}
+
+export function getWebServerOptions(argv: { port: unknown }, identity: ServerIdentity): WebServerOptions {
+  return {
+    ...getServerOptions(identity),
+    port: parsePort(argv.port),
+  }
 }

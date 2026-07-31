@@ -66,6 +66,10 @@ node build/index.js
 
 # Start with Streamable HTTP
 node build/index.js web --port 8401
+
+# Print CLI help or the package version
+node build/index.js --help
+node build/index.js --version
 ```
 
 ## Environment Variables

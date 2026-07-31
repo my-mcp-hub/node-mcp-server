@@ -2,9 +2,9 @@ import { createMcpFastifyApp } from '@modelcontextprotocol/fastify'
 import { toNodeHandler } from '@modelcontextprotocol/node'
 import { createMcpHandler } from '@modelcontextprotocol/server'
 import { createServer } from '@/services'
-import type { OptionsType } from '@/types'
+import type { WebServerOptions } from '@/types'
 
-export async function webServer(options: OptionsType) {
+export async function webServer(options: WebServerOptions) {
   const app = createMcpFastifyApp()
   const handler = createMcpHandler(() => createServer(options))
   const nodeHandler = toNodeHandler(handler)

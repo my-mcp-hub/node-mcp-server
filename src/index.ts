@@ -1,50 +1,51 @@
 #!/usr/bin/env node
-import yargs, { type ArgumentsCamelCase } from 'yargs'
+import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import { startStdioServer, startWebServer } from './services'
-import { getOptions } from './utils'
+import { DEFAULT_PORT, getServerOptions, getWebServerOptions, parsePort } from './utils'
 import 'dotenv/config'
 import pkg from '../package.json' with { type: 'json' }
 
 const name = 'node-mcp-server'
-
-const argv = await yargs()
-  .scriptName(name)
-  .usage('$0 <command> [options]')
-  .command(
-    'stdio',
-    'Start the server using the stdio transport protocol.',
-    () => {},
-    argv => startServer('stdio', argv),
-  )
-  .command(
-    'web',
-    'Start the web server transport protocol.',
-    () => {},
-    argv => startServer('web', argv),
-  )
-  .options({
-    port: {
-      describe: 'Specify the port for Streamable HTTP transport (default: 8401)',
-      type: 'string',
-      default: process.env.PORT || '8401',
-    },
-  })
-  .help()
-  .parse(hideBin(process.argv))
-
-if (!argv._[0]) {
-  startServer('stdio', argv)
+const identity = {
+  name,
+  version: pkg.version,
 }
 
-async function startServer(mode: string, argv: ArgumentsCamelCase) {
-  const options = getOptions(argv, {
-    name,
-    version: pkg.version,
-  })
-  if (mode === 'stdio') {
-    startStdioServer(options).catch(console.error)
-  } else if (mode === 'web') {
-    startWebServer(options).catch(console.error)
-  }
+const startStdio = () => {
+  startStdioServer(getServerOptions(identity))
+}
+
+try {
+  await yargs(hideBin(process.argv))
+    .scriptName(name)
+    .usage('$0 [command] [options]')
+    .command('$0', 'Start the server using the stdio transport protocol.', command => command, startStdio)
+    .command('stdio', 'Start the server using the stdio transport protocol.', command => command, startStdio)
+    .command(
+      'web',
+      'Start the server using Streamable HTTP.',
+      command =>
+        command.option('port', {
+          describe: 'Port for the Streamable HTTP transport',
+          type: 'number',
+          default: process.env.PORT ?? DEFAULT_PORT,
+          coerce: parsePort,
+        }),
+      argv => startWebServer(getWebServerOptions(argv, identity)),
+    )
+    .strict()
+    .recommendCommands()
+    .version(pkg.version)
+    .help()
+    .showHelpOnFail(false)
+    .exitProcess(false)
+    .fail((message, error) => {
+      throw error ?? new Error(message)
+    })
+    .parse()
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error)
+  console.error(`${name}: ${message}`)
+  process.exitCode = 1
 }

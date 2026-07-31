@@ -2,11 +2,11 @@ import { McpServer } from '@modelcontextprotocol/server'
 import { registerPrompts } from '@/prompts'
 import { registerResources } from '@/resources'
 import { registerTools } from '@/tools'
-import type { OptionsType } from '@/types'
+import type { ServerOptions, WebServerOptions } from '@/types'
 import { stdioServer } from './stdio'
 import { webServer } from './web'
 
-export const createServer = (options: OptionsType) => {
+export const createServer = (options: ServerOptions) => {
   const server = new McpServer(
     {
       name: options.name,
@@ -29,10 +29,10 @@ export const createServer = (options: OptionsType) => {
   return server
 }
 
-export async function startStdioServer(options: OptionsType) {
-  stdioServer(() => createServer(options))
+export function startStdioServer(options: ServerOptions) {
+  return stdioServer(() => createServer(options))
 }
 
-export async function startWebServer(options: OptionsType) {
+export async function startWebServer(options: WebServerOptions) {
   await webServer(options)
 }

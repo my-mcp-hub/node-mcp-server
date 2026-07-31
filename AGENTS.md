@@ -10,7 +10,7 @@
 
 ## Architecture and invariants
 
-- `src/index.ts` is the CLI entrypoint. Omitting the command starts stdio; `stdio` is also accepted explicitly, while `web` selects Streamable HTTP.
+- `src/index.ts` is the CLI entrypoint. Omitting the command starts stdio; `stdio` is also accepted explicitly, while `web` selects Streamable HTTP. Only `web` accepts `--port`; it and `PORT` must resolve to an integer from 1 to 65535.
 - Production builds preserve every `src/**/*.ts` module under `build` with `bundle: false`; `tsc-alias` rewrites `@/` imports and adds Node ESM `.js` suffixes. Keep `scripts/aliasReplacer.cjs`, `tsconfig.json`, and the esbuild output layout synchronized.
 - `src/services/index.ts#createServer` is the shared server factory. Register tools, resources, and prompts through their `src` registrars so both transports expose the same behavior.
 - The HTTP transport uses Fastify; Express middleware and lifecycle patterns do not apply.
