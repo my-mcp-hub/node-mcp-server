@@ -1,3 +1,40 @@
+# [0.1.0](https://github.com/my-mcp-hub/node-mcp-server/compare/v0.0.3...v0.1.0) (2026-07-31)
+
+
+### ✨ Features | 新功能
+
+* migrate server template to MCP SDK 2.0 ([52598b4](https://github.com/my-mcp-hub/node-mcp-server/commit/52598b485e53ef9d87dfde1a90a1a09350559760))
+
+
+### 🎫 Chores | 其他更新
+
+* **deps:** update actions/checkout action to v6 ([11f37a5](https://github.com/my-mcp-hub/node-mcp-server/commit/11f37a5ac829616fe7ba1a1fac8922266bd19426))
+* **deps:** update actions/setup-node action to v6 ([51937d4](https://github.com/my-mcp-hub/node-mcp-server/commit/51937d416c1918ea52d808b753931804e97310ef))
+* **deps:** update commitlint monorepo to v20.2.0 ([57505ce](https://github.com/my-mcp-hub/node-mcp-server/commit/57505ce89288cbaa2c4d8699cea90ecaf429546d))
+* **deps:** update commitlint monorepo to v20.3.0 ([ffd5b9f](https://github.com/my-mcp-hub/node-mcp-server/commit/ffd5b9f0bb382aa2d71d92c76737401521f009ca))
+* **deps:** update dependency @fastify/cors to v11.2.0 ([fb61699](https://github.com/my-mcp-hub/node-mcp-server/commit/fb61699003708af487f2ebaa61b6aba43034f0cf))
+* **deps:** update dependency @modelcontextprotocol/inspector to ^0.18.0 ([991372c](https://github.com/my-mcp-hub/node-mcp-server/commit/991372c77c1b072d51fd8d4609b493e332e5e7be))
+* **deps:** update dependency @modelcontextprotocol/inspector to v0.17.5 ([f291432](https://github.com/my-mcp-hub/node-mcp-server/commit/f291432e9baa9a511a22723f953aa0490962916b))
+* **deps:** update dependency @modelcontextprotocol/sdk to v1.24.3 ([3938ede](https://github.com/my-mcp-hub/node-mcp-server/commit/3938edeeb023806b347f60018287c845e8ad4827))
+* **deps:** update dependency @modelcontextprotocol/sdk to v1.25.1 ([e985926](https://github.com/my-mcp-hub/node-mcp-server/commit/e985926a9599d722aeb064c0f943460d7b067dd9))
+* **deps:** update dependency esbuild to ^0.27.0 ([b3f3e5a](https://github.com/my-mcp-hub/node-mcp-server/commit/b3f3e5a3f7a1c16c5286b0e9f21efc78f1708222))
+* **deps:** update dependency esbuild to v0.27.2 ([15f0c62](https://github.com/my-mcp-hub/node-mcp-server/commit/15f0c62d5b4c8b031472c93626ae32e112d896a1))
+* **deps:** update dependency eslint to v9.39.2 ([dcbaf39](https://github.com/my-mcp-hub/node-mcp-server/commit/dcbaf39fafe243ce4f9c6dce1b9844d4ee97edfe))
+* **deps:** update dependency globals to v17 ([9872e46](https://github.com/my-mcp-hub/node-mcp-server/commit/9872e46e9dbfad82a4d5e0706d03de873447b379))
+* **deps:** update dependency typescript-eslint to v8.49.0 ([6043323](https://github.com/my-mcp-hub/node-mcp-server/commit/60433239e446c57461a338a2626d9df805942f6f))
+* **deps:** update dependency typescript-eslint to v8.50.0 ([1130631](https://github.com/my-mcp-hub/node-mcp-server/commit/1130631685764566bc5d69e94c9d568f9d881e66))
+* **deps:** update dependency typescript-eslint to v8.50.1 ([76fc889](https://github.com/my-mcp-hub/node-mcp-server/commit/76fc889d5f167f75285fd2bf6d8fbdeda6db50f6))
+* **deps:** update dependency typescript-eslint to v8.51.0 ([002bb9a](https://github.com/my-mcp-hub/node-mcp-server/commit/002bb9a9ed493980f0e32fe6988822d3f94006b8))
+* **deps:** update vitest monorepo to v4.0.16 ([5754041](https://github.com/my-mcp-hub/node-mcp-server/commit/57540414e4035a6e4450362444272259b65226e2))
+* remove oxc parser and related dependencies ([cc22d2b](https://github.com/my-mcp-hub/node-mcp-server/commit/cc22d2bfee9bdb0519057ef39db9309e1ce9a54b))
+* update dependencies ([18a7b69](https://github.com/my-mcp-hub/node-mcp-server/commit/18a7b691788d9fa38c23c68d4d6d1abfefebd0b3))
+* update dependencies ([869b5d9](https://github.com/my-mcp-hub/node-mcp-server/commit/869b5d9088ea514d631976d668bba0a7796a9fc8))
+
+
+### 🐛 Bug Fixes | Bug 修复
+
+* **build:** preserve source module layout ([ffa26e0](https://github.com/my-mcp-hub/node-mcp-server/commit/ffa26e0a25da5d3a4fbf61a66bd3024db23be73a))
+
 ## [0.0.3](https://github.com/my-mcp-hub/node-mcp-server/compare/v0.0.2...v0.0.3) (2025-11-27)
 
 
